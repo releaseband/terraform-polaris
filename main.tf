@@ -1,7 +1,62 @@
+resource "kubernetes_cluster_role" "main" {
+  metadata {
+    name = "polaris-calico"
+  }
+
+  rule {
+    api_groups = [""]
+    resources  = ["*"]
+    verbs      = ["*"]
+  }
+}
+
+
+resource "kubernetes_cluster_role_binding" "main" {
+  metadata {
+    name = "polaris-calico"
+  }
+  role_ref {
+    api_group = "rbac.authorization.k8s.io"
+    kind      = "ClusterRole"
+    name      = kubernetes_cluster_role.main.metadata[0].name
+  }
+  subject {
+    kind      = "ServiceAccount"
+    name      = "polaris"
+    namespace = kubernetes_namespace.main.metadata[0].name
+  }
+}
+
+resource "kubernetes_namespace" "main" {
+  metadata {
+    labels = {
+      name = "polaris"
+    }
+    name = "polaris"
+    annotations = {
+      "linkerd.io/inject"                  = "enabled"
+      "config.linkerd.io/proxy-await"      = "enabled"
+      "config.linkerd.io/proxy-log-format" = "json"
+    }
+  }
+}
+
+
+resource "helm_release" "polaris" {
+  name        = "polaris"
+  namespace   = kubernetes_namespace.main.metadata[0].name
+  repository  = "https://charts.fairwinds.com/stable"
+  version     = var.polaris_helm_chart_version
+  chart       = "polaris"
+  timeout     = 180
+  max_history = 10
+  values      = var.polaris_helm_chart_values
+}
+
 resource "kubernetes_network_policy" "deny-all" {
   metadata {
     name      = "deny-all"
-    namespace = kubernetes_namespace.namespace.metadata[0].name
+    namespace = kubernetes_namespace.main.metadata[0].name
   }
 
   spec {
@@ -14,7 +69,7 @@ resource "kubernetes_network_policy" "deny-all" {
 resource "kubernetes_network_policy" "allow-dns-https" {
   metadata {
     name      = "allow-dns"
-    namespace = kubernetes_namespace.namespace.metadata[0].name
+    namespace = kubernetes_namespace.main.metadata[0].name
   }
 
   spec {
@@ -45,7 +100,7 @@ resource "kubernetes_network_policy" "allow-dns-https" {
 resource "kubernetes_network_policy" "polaris_webhook" {
   metadata {
     name      = "polaris-webhook"
-    namespace = kubernetes_namespace.namespace.metadata[0].name
+    namespace = kubernetes_namespace.main.metadata[0].name
   }
 
   spec {
@@ -68,7 +123,7 @@ resource "kubernetes_network_policy" "polaris_webhook" {
 resource "kubernetes_network_policy" "vault" {
   metadata {
     name      = "polaris-vault"
-    namespace = kubernetes_namespace.namespace.metadata[0].name
+    namespace = kubernetes_namespace.main.metadata[0].name
   }
 
   spec {
@@ -98,7 +153,7 @@ resource "kubernetes_network_policy" "vault" {
 resource "kubernetes_network_policy" "linkerd_proxy" {
   metadata {
     name      = "linkerd-proxy"
-    namespace = kubernetes_namespace.namespace.metadata[0].name
+    namespace = kubernetes_namespace.main.metadata[0].name
   }
 
   spec {

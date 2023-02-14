@@ -13,21 +13,13 @@ variable "domain_name" {
   type        = string
 }
 
-variable "allowed_container_registry" {
-  description = "Pattern for allowed container registry"
-  default     = ".*"
+variable "polaris_helm_chart_version" {
   type        = string
+  default     = "5.4.2"
+  description = "polaris helm chart version"
 }
 
-
-variable "polaris_image_repository" {
-  default     = "quay.io/fairwinds/polaris"
-  description = "polaris image repository"
-  type        = string
-}
-
-variable "polaris_image_tag" {
-  default     = "7.0.2"
-  description = "polaris image tag"
-  type        = string
+variable "polaris_helm_chart_values" {
+  default     = ""
+  description = "values for polaris helm chart"
 }
