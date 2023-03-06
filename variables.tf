@@ -3,10 +3,6 @@ variable "vault_token" {
   type        = string
 }
 
-variable "wait_vault" {
-  description = "Variable for module order"
-  type        = string
-}
 
 variable "domain_name" {
   description = "Domain for vault provider"
@@ -20,6 +16,7 @@ variable "polaris_helm_chart_version" {
 }
 
 variable "polaris_helm_chart_values" {
+  type        = string
   default     = ""
   description = "values for polaris helm chart"
 }

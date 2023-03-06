@@ -1,12 +1,19 @@
 <!-- BEGIN_TF_DOCS -->
+## Requirements
 
+| Name | Version |
+|------|---------|
+| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.0 |
+| <a name="requirement_helm"></a> [helm](#requirement\_helm) | >= 2.8 |
+| <a name="requirement_kubernetes"></a> [kubernetes](#requirement\_kubernetes) | >= 2.16 |
+| <a name="requirement_vault"></a> [vault](#requirement\_vault) | >= 3.11 |
 
 ## Providers
 
 | Name | Version |
 |------|---------|
-| <a name="provider_helm"></a> [helm](#provider\_helm) | n/a |
-| <a name="provider_kubernetes"></a> [kubernetes](#provider\_kubernetes) | n/a |
+| <a name="provider_helm"></a> [helm](#provider\_helm) | >= 2.8 |
+| <a name="provider_kubernetes"></a> [kubernetes](#provider\_kubernetes) | >= 2.16 |
 
 ## Resources
 
@@ -30,5 +37,4 @@
 | <a name="input_polaris_helm_chart_values"></a> [polaris\_helm\_chart\_values](#input\_polaris\_helm\_chart\_values) | values for polaris helm chart | `string` | `""` | no |
 | <a name="input_polaris_helm_chart_version"></a> [polaris\_helm\_chart\_version](#input\_polaris\_helm\_chart\_version) | polaris helm chart version | `string` | `"5.4.2"` | no |
 | <a name="input_vault_token"></a> [vault\_token](#input\_vault\_token) | Token for vault provider | `string` | n/a | yes |
-| <a name="input_wait_vault"></a> [wait\_vault](#input\_wait\_vault) | Variable for module order | `string` | n/a | yes |
 <!-- END_TF_DOCS -->
