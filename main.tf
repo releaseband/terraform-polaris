@@ -192,15 +192,21 @@ resource "kubernetes_network_policy" "linkerd_proxy" {
           }
         }
       }
+    }
+    ingress {
+      ports {
+        port     = "4191"
+        protocol = "TCP"
+      }
       from {
         namespace_selector {
           match_labels = {
-            name = "linkerd-viz"
+            name = "monitoring"
           }
         }
         pod_selector {
           match_labels = {
-            component = "prometheus"
+            "app.kubernetes.io/name" = "prometheus"
           }
         }
       }
