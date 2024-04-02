@@ -51,6 +51,22 @@ resource "helm_release" "polaris" {
   timeout     = 180
   max_history = 10
   values      = var.polaris_helm_chart_values
+  set {
+    name = "dashboard.resources.limits.cpu"
+    value = var.dashboard_resources.limits.cpu
+  }
+  set {
+    name = "dashboard.resources.limits.memory"
+    value = var.dashboard_resources.limits.memory
+  }
+  set {
+    name = "dashboard.resources.requests.cpu"
+    value = var.dashboard_resources.requests.cpu
+  }
+  set {
+    name = "dashboard.resources.requests.memory"
+    value = var.dashboard_resources.requests.memory
+  }
 }
 
 resource "kubernetes_network_policy" "deny-all" {
