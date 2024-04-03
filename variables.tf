@@ -21,11 +21,11 @@ variable "polaris_helm_chart_values" {
 }
 
 variable "dashboard_resources" {
-  type = map(any)
+  type        = map(any)
   description = "dashboard resources"
 }
 
 variable "webhook_resources" {
-  type = map(any)
+  type        = map(any)
   description = "webhook resources"
 }
