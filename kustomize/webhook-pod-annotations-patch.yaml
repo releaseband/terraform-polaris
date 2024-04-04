@@ -1,0 +1,13 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: polaris-webhook
+spec:
+  template:
+    metadata:
+      annotations:
+        "config.linkerd.io/proxy-cpu-request": "1m"
+        "config.linkerd.io/proxy-cpu-limit": "2m"
+        "config.linkerd.io/proxy-memory-request": "10Mi"
+        "config.linkerd.io/proxy-memory-limit": "20Mi"
+          

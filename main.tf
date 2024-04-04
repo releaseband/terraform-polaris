@@ -50,6 +50,9 @@ resource "helm_release" "polaris" {
   chart       = "polaris"
   timeout     = 180
   max_history = 10
+  postrender {
+    binary_path = "${path.module}/kustomize/kustomize.sh"
+  }
   values      = var.polaris_helm_chart_values
   set {
     name  = "dashboard.resources.limits.cpu"
@@ -66,6 +69,22 @@ resource "helm_release" "polaris" {
   set {
     name  = "dashboard.resources.requests.memory"
     value = var.dashboard_resources.requests.memory
+  }
+  set {
+    name  = "webhook.resources.limits.cpu"
+    value = var.webhook_resources.limits.cpu
+  }
+  set {
+    name  = "webhook.resources.limits.memory"
+    value = var.webhook_resources.limits.memory
+  }
+  set {
+    name  = "webhook.resources.requests.cpu"
+    value = var.webhook_resources.requests.cpu
+  }
+  set {
+    name  = "webhook.resources.requests.memory"
+    value = var.webhook_resources.requests.memory
   }
 }
 
