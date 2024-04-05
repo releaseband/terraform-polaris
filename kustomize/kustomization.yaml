@@ -1,0 +1,11 @@
+resources:
+  - custom.yaml
+patches:
+  - path: dashboard-pod-annotations-patch.yaml
+    target:
+      kind: Deployment
+      name: polaris-dashboard
+  - path: webhook-pod-annotations-patch.yaml
+    target:
+      kind: Deployment
+      name: polaris-webhook
