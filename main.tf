@@ -45,7 +45,7 @@ resource "kubernetes_namespace" "main" {
 resource "helm_release" "polaris" {
   name        = "polaris"
   namespace   = kubernetes_namespace.main.metadata[0].name
-  repository  = "https://charts.fairwinds.com/stable"
+  repository  = "https://nexus.releaseband.com/repository/helm-proxy-polaris/"
   version     = var.polaris_helm_chart_version
   chart       = "polaris"
   timeout     = 180
