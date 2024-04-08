@@ -33,6 +33,7 @@
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
+| <a name="input_dashboard_resources"></a> [dashboard\_resources](#input\_dashboard\_resources) | dashboard resources | `map(any)` | n/a | yes |
 | <a name="input_domain_name"></a> [domain\_name](#input\_domain\_name) | Domain for vault provider | `string` | n/a | yes |
 | <a name="input_polaris_helm_chart_values"></a> [polaris\_helm\_chart\_values](#input\_polaris\_helm\_chart\_values) | values for polaris helm chart | `string` | `""` | no |
 | <a name="input_polaris_helm_chart_version"></a> [polaris\_helm\_chart\_version](#input\_polaris\_helm\_chart\_version) | polaris helm chart version | `string` | `"5.4.2"` | no |
