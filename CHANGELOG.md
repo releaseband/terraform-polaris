@@ -1,5 +1,19 @@
 # Changelog
 
+## [2.2.0](https://github.com/releaseband/terraform-polaris/compare/v2.1.0...v2.2.0) (2024-04-05)
+
+
+### Features
+
+* added kustomize ([d2b01b8](https://github.com/releaseband/terraform-polaris/commit/d2b01b85dc093e8d81f5b0f87a3680b988779408))
+* added new containers resources variables ([d307b79](https://github.com/releaseband/terraform-polaris/commit/d307b794fb2d22b3c09ecb2c2fcdd5567ae039cf))
+* **main.tf:** added custom variables for helm chart ([c1c139f](https://github.com/releaseband/terraform-polaris/commit/c1c139f7c69deb8f27905b08e004b225e395c825))
+
+
+### Bug Fixes
+
+* formated ([b7e789f](https://github.com/releaseband/terraform-polaris/commit/b7e789f3a5f58af60c7f715356ece910cbcf2737))
+
 ## [2.1.0](https://github.com/releaseband/terraform-polaris/compare/v2.0.2...v2.1.0) (2023-10-30)
 
 
