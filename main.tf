@@ -53,7 +53,7 @@ resource "helm_release" "polaris" {
   postrender {
     binary_path = "${path.module}/kustomize/kustomize.sh"
   }
-  values      = var.polaris_helm_chart_values
+  values = var.polaris_helm_chart_values
   set {
     name  = "dashboard.resources.limits.cpu"
     value = var.dashboard_resources.limits.cpu
