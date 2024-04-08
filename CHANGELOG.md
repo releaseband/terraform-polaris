@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.2.2](https://github.com/releaseband/terraform-polaris/compare/v2.2.1...v2.2.2) (2024-04-08)
+
+
+### Bug Fixes
+
+* updated README and formatted main.tf ([426488b](https://github.com/releaseband/terraform-polaris/commit/426488b68b61aa8fcaf75c1705ddf05bd297dc48))
+
 ## [2.2.1](https://github.com/releaseband/terraform-polaris/compare/v2.2.0...v2.2.1) (2024-04-08)
 
 
