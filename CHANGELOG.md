@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.2.1](https://github.com/releaseband/terraform-polaris/compare/v2.2.0...v2.2.1) (2024-04-08)
+
+
+### Bug Fixes
+
+* changed helmchart url to nexus ([a52ca32](https://github.com/releaseband/terraform-polaris/commit/a52ca32e855bbb4e9f1d99e101ca7c9456dec438))
+
 ## [2.2.0](https://github.com/releaseband/terraform-polaris/compare/v2.1.0...v2.2.0) (2024-04-05)
 
 
