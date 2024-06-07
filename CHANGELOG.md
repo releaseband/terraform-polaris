@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.3.0](https://github.com/releaseband/terraform-polaris/compare/v2.2.2...v2.3.0) (2024-06-07)
+
+
+### Features
+
+* add oauth2 service ([4ba9c28](https://github.com/releaseband/terraform-polaris/commit/4ba9c285736abfed133bcbd882d8530a6ba1c18b))
+
 ## [2.2.2](https://github.com/releaseband/terraform-polaris/compare/v2.2.1...v2.2.2) (2024-04-08)
 
 
