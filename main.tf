@@ -1,3 +1,9 @@
+locals {
+  appname                    = "polaris-oauth2-proxy"
+  azure_appname              = "polaris-oauth2-${var.eks_cluster_name}"
+  oauth2_proxy_cookie_secret = "2HbbTskSPJ1nU0Tl5sbbfAyOGLQJ4uDLHur2q9TEDQM=" # it's random openssl rand -base64 32
+  redirectUrl                = "https://polaris.${var.domain_name}/oauth2/callback"
+}
 resource "kubernetes_cluster_role" "main" {
   metadata {
     name = "polaris-calico"
@@ -185,16 +191,16 @@ resource "kubernetes_network_policy" "vault" {
 }
 
 
-resource "kubernetes_network_policy" "linkerd_proxy" {
+resource "kubernetes_network_policy" "polaris_proxy" {
   metadata {
-    name      = "linkerd-proxy"
+    name      = "polaris-proxy"
     namespace = kubernetes_namespace.main.metadata[0].name
   }
 
   spec {
     pod_selector {
       match_expressions {
-        key      = "linkerd.io/workload-ns"
+        key      = "polaris.io/workload-ns"
         operator = "Exists"
       }
     }
@@ -202,12 +208,12 @@ resource "kubernetes_network_policy" "linkerd_proxy" {
       to {
         namespace_selector {
           match_labels = {
-            name = "linkerd"
+            name = "polaris"
           }
         }
         pod_selector {
           match_expressions {
-            key      = "linkerd.io/control-plane-component"
+            key      = "polaris.io/control-plane-component"
             operator = "Exists"
           }
         }
@@ -217,12 +223,12 @@ resource "kubernetes_network_policy" "linkerd_proxy" {
       from {
         namespace_selector {
           match_labels = {
-            name = "linkerd"
+            name = "polaris"
           }
         }
         pod_selector {
           match_expressions {
-            key      = "linkerd.io/control-plane-component"
+            key      = "polaris.io/control-plane-component"
             operator = "Exists"
           }
         }
@@ -247,5 +253,150 @@ resource "kubernetes_network_policy" "linkerd_proxy" {
       }
     }
     policy_types = ["Egress", "Ingress"]
+  }
+}
+resource "kubernetes_network_policy" "linkerd_proxy" {
+  metadata {
+    name      = "linkerd-proxy"
+    namespace = kubernetes_namespace.main.metadata[0].name
+  }
+  spec {
+    pod_selector {
+      match_expressions {
+        key      = "linkerd.io/workload-ns"
+        operator = "Exists"
+      }
+    }
+    ingress {
+      from {
+        namespace_selector {
+          match_labels = {
+            name = "linkerd"
+          }
+        }
+        pod_selector {
+          match_expressions {
+            key      = "linkerd.io/control-plane-component"
+            operator = "Exists"
+          }
+        }
+      }
+      ports {
+        protocol = "TCP"
+        port     = "4191"
+      }
+      from {
+        namespace_selector {
+          match_labels = {
+            name = "monitoring"
+          }
+        }
+        pod_selector {
+          match_labels = {
+            "app.kubernetes.io/name" = "prometheus"
+          }
+        }
+      }
+    }
+    egress {
+      to {
+        pod_selector {
+          match_expressions {
+            key      = "linkerd.io/control-plane-component"
+            operator = "Exists"
+          }
+        }
+        namespace_selector {
+          match_labels = {
+            name = "linkerd"
+          }
+        }
+      }
+    }
+    policy_types = ["Egress", "Ingress"]
+  }
+}
+resource "kubernetes_network_policy" "polaris_dashboard" {
+  metadata {
+    name      = "polaris-dashboard"
+    namespace = kubernetes_namespace.main.metadata[0].name
+  }
+  spec {
+    pod_selector {
+      match_labels = {
+        "app"                         = "polaris"
+      }
+    }
+    ingress {
+      ports {
+        protocol = "TCP"
+        port     = "8080"
+      }
+      from {
+        pod_selector {
+          match_labels = {
+            "app.kubernetes.io/name" = "ingress-nginx"
+          }
+        }
+        namespace_selector {}
+      }
+    }
+    policy_types = ["Ingress"]
+  }
+}
+resource "vault_kubernetes_auth_backend_role" "main" {
+  backend                          = "kubernetes/"
+  role_name                        = "polaris"
+  bound_service_account_names      = ["polaris"]
+  bound_service_account_namespaces = ["polaris"]
+  token_ttl                        = 3600
+  token_policies                   = ["polaris"]
+}
+resource "vault_policy" "main" {
+  name = "polaris"
+
+  policy = <<EOT
+path "secrets/polaris/*" {
+  capabilities = ["read"]
+}
+EOT
+}
+data "kubernetes_ingress_v1" "ingress" {
+  metadata {
+    name      = "ingress-global-alb"
+    namespace = "ingress"
+  }
+}
+resource "kubernetes_ingress_v1" "polaris-dashboard" {
+  metadata {
+    name      = "polaris-dashboard"
+    namespace = kubernetes_namespace.main.metadata[0].name
+    annotations = {
+      "external-dns.alpha.kubernetes.io/target"    = data.kubernetes_ingress_v1.ingress.status.0.load_balancer.0.ingress.0.hostname
+      "nginx.ingress.kubernetes.io/auth-signin"    = "https://polaris.releaseband.com/oauth2/sign_in?rd=%2F"
+      "nginx.ingress.kubernetes.io/auth-url"       = "http://polaris-oauth2-proxy.polaris.svc.cluster.local:4180/oauth2/auth"
+      "nginx.ingress.kubernetes.io/rewrite-target" = "/"
+      "nginx.ingress.kubernetes.io/ssl-redirect"   = "false"
+    }
+  }
+  spec {
+    ingress_class_name = "global"
+    rule {
+      host = "polaris.${var.domain_name}"
+      http {
+        path {
+          path      = "/"
+          path_type = "Prefix"
+          backend {
+            service {
+              name = "polaris-dashboard"
+              port {
+                number = 80
+              }
+            }
+          }
+        }
+      }
+    }
   }
 }
