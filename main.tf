@@ -400,3 +400,21 @@ resource "kubernetes_ingress_v1" "polaris-dashboard" {
     }
   }
 }
+data "azuread_application" "current" {
+  display_name = local.azure_appname
+}
+data "kubernetes_secret_v1" "oauth2" {
+  metadata {
+    name      = local.appname
+    namespace = kubernetes_namespace.main.metadata[0].name
+  }
+}
+
+resource "vault_generic_secret" "oauth2_proxy" {
+  path = "secrets/polaris/oauth2-proxy-config"
+  data_json = jsonencode({
+    oauth2_proxy_client_id     = data.azuread_application.current.client_id
+    oauth2_proxy_client_secret = data.kubernetes_secret_v1.oauth2.data["attribute.value"]
+    oauth2_proxy_cookie_secret = local.oauth2_proxy_cookie_secret
+  })
+}
