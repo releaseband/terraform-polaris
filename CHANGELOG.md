@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.3.1](https://github.com/releaseband/terraform-polaris/compare/v2.3.0...v2.3.1) (2024-06-11)
+
+
+### Bug Fixes
+
+* commented deployment oauth2 and moved creation vault secret to main.rf ([20bf9ae](https://github.com/releaseband/terraform-polaris/commit/20bf9ae36b60774342ad0d3334b9f066a8c84f5e))
+
 ## [2.3.0](https://github.com/releaseband/terraform-polaris/compare/v2.2.2...v2.3.0) (2024-06-07)
 
 
