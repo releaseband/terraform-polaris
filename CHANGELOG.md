@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.3.2](https://github.com/releaseband/terraform-polaris/compare/v2.3.1...v2.3.2) (2024-07-24)
+
+
+### Bug Fixes
+
+* vault policy path ([7c89b84](https://github.com/releaseband/terraform-polaris/commit/7c89b8460125c6052ba894cd8ee1a0699b3861c4))
+
 ## [2.3.1](https://github.com/releaseband/terraform-polaris/compare/v2.3.0...v2.3.1) (2024-06-11)
 
 
