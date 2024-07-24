@@ -1,9 +1,9 @@
-locals {
-  appname                    = "polaris-oauth2-proxy"
-  azure_appname              = "polaris-oauth2-${var.eks_cluster_name}"
-  oauth2_proxy_cookie_secret = "2HbbTskSPJ1nU0Tl5sbbfAyOGLQJ4uDLHur2q9TEDQM=" # it's random openssl rand -base64 32
-  redirectUrl                = "https://polaris.${var.domain_name}/oauth2/callback"
-}
+# locals {
+#   appname                    = "polaris-oauth2-proxy"
+#   azure_appname              = "polaris-oauth2-${var.eks_cluster_name}"
+#   oauth2_proxy_cookie_secret = "2HbbTskSPJ1nU0Tl5sbbfAyOGLQJ4uDLHur2q9TEDQM=" # it's random openssl rand -base64 32
+#   redirectUrl                = "https://polaris.${var.domain_name}/oauth2/callback"
+# }
 resource "kubernetes_cluster_role" "main" {
   metadata {
     name = "polaris-calico"
@@ -356,7 +356,7 @@ resource "vault_policy" "main" {
   name = "polaris"
 
   policy = <<EOT
-path "secrets/polaris/*" {
+path "secret/data/infrastructure/polaris/*" {
   capabilities = ["read"]
 }
 EOT
@@ -400,21 +400,21 @@ resource "kubernetes_ingress_v1" "polaris-dashboard" {
     }
   }
 }
-data "azuread_application" "current" {
-  display_name = local.azure_appname
-}
-data "kubernetes_secret_v1" "oauth2" {
-  metadata {
-    name      = local.appname
-    namespace = kubernetes_namespace.main.metadata[0].name
-  }
-}
+# data "azuread_application" "current" {
+#   display_name = local.azure_appname
+# }
+# data "kubernetes_secret_v1" "oauth2" {
+#   metadata {
+#     name      = local.appname
+#     namespace = kubernetes_namespace.main.metadata[0].name
+#   }
+# }
 
-resource "vault_generic_secret" "oauth2_proxy" {
-  path = "secrets/polaris/oauth2-proxy-config"
-  data_json = jsonencode({
-    oauth2_proxy_client_id     = data.azuread_application.current.client_id
-    oauth2_proxy_client_secret = data.kubernetes_secret_v1.oauth2.data["attribute.value"]
-    oauth2_proxy_cookie_secret = local.oauth2_proxy_cookie_secret
-  })
-}
+# resource "vault_generic_secret" "oauth2_proxy" {
+#   path = "secrets/polaris/oauth2-proxy-config"
+#   data_json = jsonencode({
+#     oauth2_proxy_client_id     = data.azuread_application.current.client_id
+#     oauth2_proxy_client_secret = data.kubernetes_secret_v1.oauth2.data["attribute.value"]
+#     oauth2_proxy_cookie_secret = local.oauth2_proxy_cookie_secret
+#   })
+# }
