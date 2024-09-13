@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.3.3](https://github.com/releaseband/terraform-polaris/compare/v2.3.2...v2.3.3) (2024-09-13)
+
+
+### Bug Fixes
+
+* deleted oauth2 finally ([fe533e4](https://github.com/releaseband/terraform-polaris/commit/fe533e428da38d2fe9d8650f19a15bbf4bfa5a4a))
+
 ## [2.3.2](https://github.com/releaseband/terraform-polaris/compare/v2.3.1...v2.3.2) (2024-07-24)
 
 
